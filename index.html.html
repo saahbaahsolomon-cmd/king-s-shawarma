@@ -1,0 +1,499 @@
+<title>King's Shawarma</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;700&display=swap">
+<style>
+/* Layout: crimson poster-style hero with a "royal ticket" card, then a menu that doubles as an order builder, a sticky total bar, and a find-us block anchored on the Dr. Ampomah Junction landmark. */
+:root {
+  --bg: #F1F8F2;
+  --surface: #FFFFFF;
+  --fg: #0B2316;
+  --muted: #46614F;
+  --line: #CDE2D2;
+  --brand: #0E6B3A;
+  --on-brand: #FFFFFF;
+  --gold: #E8B230;
+  --on-gold: #0B2316;
+  --hero: #0E5A33;
+  --on-hero: #F1F8F2;
+  --ticket: #F1F8F2;
+  --ticket-fg: #0B2316;
+  --ticket-accent: #0E6B3A;
+  --good: #1E7A45;
+  --bad: #A6122B;
+  --display: "Alfa Slab One", "Rockwell", Georgia, serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07140C;
+    --surface: #0F2417;
+    --fg: #E9F5EC;
+    --muted: #9DBFA8;
+    --line: #1F4030;
+    --brand: #1F8A4C;
+    --good: #5CC98A;
+    --bad: #FF8A9B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #07140C;
+  --surface: #0F2417;
+  --fg: #E9F5EC;
+  --muted: #9DBFA8;
+  --line: #1F4030;
+  --brand: #1F8A4C;
+  --good: #5CC98A;
+  --bad: #FF8A9B;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-bottom: 96px;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.wrap {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 22px;
+  font: 700 16px/1 var(--body);
+  border: 2px solid transparent; border-radius: 6px;
+  text-decoration: none; cursor: pointer;
+}
+.btn-gold { background: var(--gold); color: var(--on-gold); }
+.btn-ghost { background: transparent; color: var(--on-hero); border-color: var(--on-hero); }
+.btn-brand { background: var(--brand); color: var(--on-brand); }
+.btn-line { background: transparent; color: var(--fg); border-color: var(--fg); }
+.btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+
+/* hero */
+.hero { background: radial-gradient(circle at 88% 12%, rgba(232,178,48,.3), transparent 42%), var(--hero); color: var(--on-hero); }
+.hero .wrap { display: grid; gap: 32px; padding-block: 28px 44px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mark { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 20px; letter-spacing: .02em; }
+.mark svg { width: 34px; height: 26px; flex: none; }
+.status { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; padding: 6px 12px; border: 1px solid rgba(255,244,241,.5); border-radius: 999px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa; flex: none; }
+.status[data-open="true"] .dot { background: #5CE08F; }
+.status[data-open="false"] .dot { background: #FFB0BB; }
+.hero-body { display: grid; gap: 28px; min-width: 0; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.hero h1 { font-size: clamp(2.6rem, 11vw, 5.4rem); margin-block: 10px 16px; }
+.hero h1 span { color: var(--gold); }
+.lede { max-width: 46ch; font-size: 18px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+.ticket {
+  background: var(--ticket); color: var(--ticket-fg);
+  border-radius: 8px; padding: 22px;
+  border: 3px dashed var(--ticket-accent);
+  outline: 6px solid var(--ticket); outline-offset: -3px;
+  display: grid; gap: 6px; align-self: start; min-width: 0;
+}
+.ticket .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ticket-accent); }
+.ticket h2 { font-size: 28px; color: var(--ticket-fg); }
+.ticket .price { font-family: var(--display); font-size: 44px; color: var(--ticket-accent); font-variant-numeric: tabular-nums; }
+.ticket p { color: #46614F; font-size: 15px; }
+.side-col { display: grid; gap: 18px; min-width: 0; }
+.art { width: 100%; max-width: 360px; height: auto; justify-self: center; }
+
+@media (min-width: 820px) {
+  .hero-body { gap: 48px; }
+  .hero .wrap { padding-block: 32px 64px; }
+}
+
+/* sections */
+section { padding-block: 56px; }
+.sec-head { display: grid; gap: 8px; margin-bottom: 28px; max-width: 60ch; }
+.sec-head h2 { font-size: clamp(1.9rem, 6vw, 2.8rem); }
+.sec-head p { color: var(--muted); }
+.tag { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); }
+
+/* menu */
+.menu-grid { display: grid; gap: 28px 40px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.cat { min-width: 0; }
+.cat h3 { font-size: 22px; padding-bottom: 10px; border-bottom: 3px solid var(--gold); margin-bottom: 4px; }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; align-items: center; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.item .info { min-width: 0; }
+.item .name { font-weight: 700; }
+.item .desc { color: var(--muted); font-size: 14px; }
+.item .side { display: grid; justify-items: end; gap: 8px; }
+.item .cost { font-weight: 700; font-variant-numeric: tabular-nums; }
+.stepper { display: inline-flex; align-items: center; border: 2px solid var(--fg); border-radius: 6px; }
+.stepper button { width: 40px; height: 40px; border: 0; background: transparent; color: var(--fg); font: 700 20px/1 var(--body); cursor: pointer; }
+.stepper button:hover { background: var(--line); }
+.stepper output { min-width: 28px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.item[data-qty="0"] .stepper { border-color: var(--line); }
+.item[data-qty="0"] .stepper output { color: var(--muted); }
+.note { margin-top: 20px; font-size: 14px; color: var(--muted); }
+
+/* order */
+.order { background: var(--surface); border-block: 1px solid var(--line); }
+.order-grid { display: grid; gap: 32px; }
+@media (min-width: 820px) { .order-grid { grid-template-columns: 1fr 1fr; gap: 56px; } }
+.lines { list-style: none; margin: 0; padding: 0; display: grid; }
+.lines li { display: flex; justify-content: space-between; gap: 16px; padding-block: 10px; border-bottom: 1px solid var(--line); }
+.lines li span:last-child { font-variant-numeric: tabular-nums; font-weight: 700; flex: none; }
+.lines li.empty { color: var(--muted); }
+.total-row { display: flex; justify-content: space-between; align-items: baseline; padding-top: 16px; font-weight: 700; }
+.total-row strong { font-family: var(--display); font-weight: 400; font-size: 32px; color: var(--brand); font-variant-numeric: tabular-nums; }
+.form { display: grid; gap: 16px; align-content: start; }
+.field { display: grid; gap: 6px; }
+.field label, .field legend { font-size: 14px; font-weight: 700; }
+.field input[type="text"], .field textarea {
+  font: 400 16px/1.4 var(--body); color: var(--fg); background: var(--bg);
+  border: 2px solid var(--line); border-radius: 6px; padding: 10px 12px; width: 100%;
+}
+.field textarea { min-height: 84px; resize: vertical; }
+fieldset.field { border: 0; padding: 0; margin: 0; min-width: 0; }
+.choices { display: flex; gap: 10px; flex-wrap: wrap; }
+.choices label { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--line); border-radius: 6px; padding: 10px 14px; font-weight: 500; cursor: pointer; }
+.choices input { accent-color: var(--brand); width: 18px; height: 18px; }
+.choices label:has(input:checked) { border-color: var(--brand); }
+.hint { font-size: 14px; color: var(--muted); }
+
+/* why */
+.why { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.why h3 { font-size: 22px; margin-bottom: 8px; }
+.why p { color: var(--muted); }
+.why > div { border-top: 3px solid var(--brand); padding-top: 14px; }
+
+/* find us */
+.find { display: grid; gap: 32px; }
+@media (min-width: 820px) { .find { grid-template-columns: 1.2fr 1fr; gap: 56px; } }
+.addr { font-family: var(--display); font-size: clamp(1.5rem, 5vw, 2.2rem); line-height: 1.15; }
+.landmark { margin-top: 10px; color: var(--muted); max-width: 44ch; }
+.find .cta { margin-top: 20px; }
+.hours { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.hours th, .hours td { text-align: left; padding: 10px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+.hours td { text-align: right; }
+.hours tr.today th, .hours tr.today td { font-weight: 700; color: var(--brand); }
+.contact { margin-top: 20px; display: grid; gap: 4px; }
+.contact b { font-variant-numeric: tabular-nums; }
+
+footer { background: var(--hero); color: var(--on-hero); padding-block: 28px; font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* sticky total */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: var(--surface); border-top: 2px solid var(--brand);
+  padding-top: 10px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar-in { max-width: 1080px; margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bar .sum { display: grid; line-height: 1.2; min-width: 0; }
+.bar .sum small { color: var(--muted); font-size: 13px; }
+.bar .sum strong { font-size: 20px; font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform .12s ease; }
+  .btn:hover { transform: translateY(-2px); }
+}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <div class="mark">
+        <svg viewBox="0 0 34 26" aria-hidden="true"><path d="M2 22 L4 6 L12 14 L17 3 L22 14 L30 6 L32 22 Z" fill="#E8B230"/><rect x="2" y="22" width="30" height="3" fill="#E8B230"/><circle cx="4" cy="5" r="2" fill="#E8B230"/><circle cx="17" cy="2.5" r="2" fill="#E8B230"/><circle cx="30" cy="5" r="2" fill="#E8B230"/></svg>
+        KING'S SHAWARMA
+      </div>
+      <div class="status" id="status" data-open="false"><span class="dot"></span><span id="statusText">Checking hours</span></div>
+    </div>
+
+    <div class="hero-body">
+      <div>
+        <p class="eyebrow">Abuakwa Maakro</p>
+        <h1>Eat like <span>royalty.</span></h1>
+        <p class="lede">Fresh shawarma at Abuakwa Maakro, opposite Dr. Ampomah Junction. Choose your items and send your order on WhatsApp.</p>
+        <div class="cta">
+          <button class="btn btn-gold" type="button" data-go="menu">Start your order</button>
+          <button class="btn btn-ghost" type="button" data-go="find">Find the stand</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag">The menu</p>
+        <h2>Pick it, wrap it, send it.</h2>
+        <p>Tap + to add items to your order.</p>
+      </div>
+      <div class="menu-grid" id="menuGrid"></div>
+      <p class="note">Prices are in Ghana cedis (GH₵).</p>
+    </div>
+  </section>
+
+  <section class="order" id="order">
+    <div class="wrap order-grid">
+      <div>
+        <div class="sec-head">
+          <p class="tag">Your order</p>
+          <h2>Check it, then send.</h2>
+        </div>
+        <ul class="lines" id="lines" aria-live="polite"></ul>
+        <div class="total-row"><span>Total</span><strong id="total">GH₵0</strong></div>
+      </div>
+      <form class="form" id="orderForm" autocomplete="off">
+        <div class="field">
+          <label for="custName">Your name</label>
+          <input type="text" id="custName" placeholder="e.g. Kwame">
+        </div>
+        <fieldset class="field">
+          <legend>How will you get it?</legend>
+          <div class="choices">
+            <label for="fPickup"><input type="radio" name="fulfil" id="fPickup" value="Pickup" checked> Pickup</label>
+            <label for="fDeliver"><input type="radio" name="fulfil" id="fDeliver" value="Delivery"> Delivery</label>
+          </div>
+        </fieldset>
+        <div class="field" id="addrField" hidden>
+          <label for="custAddr">Delivery location</label>
+          <input type="text" id="custAddr" placeholder="Landmark or area in Abuakwa">
+        </div>
+        <div class="field">
+          <label for="custNote">Anything to add? (optional)</label>
+          <textarea id="custNote" placeholder="No pepper, extra sauce, and so on"></textarea>
+        </div>
+        <a class="btn btn-brand" id="sendBtn" href="#" target="_blank" rel="noopener" aria-disabled="true">Send order on WhatsApp</a>
+        <button class="btn btn-line" type="button" id="copyBtn">Copy order text</button>
+        <textarea id="copyBox" readonly hidden aria-label="Your order text" style="min-height:140px;font:400 15px/1.4 var(--body);color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:6px;padding:10px 12px;width:100%"></textarea>
+        <p class="hint" id="sendHint">Add at least one item to send your order.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="find">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag">Find us</p>
+        <h2>Come hungry.</h2>
+      </div>
+      <div class="find">
+        <div>
+          <p class="addr">Abuakwa Maakro, Kumasi</p>
+          <p class="landmark">Opposite Dr. Ampomah Junction. Look for the King's Shawarma sign by the roadside.</p>
+          <div class="cta">
+            <a class="btn btn-brand" href="https://www.google.com/maps/search/?api=1&query=Dr+Ampomah+Junction+Abuakwa+Kumasi" target="_blank" rel="noopener">Open in Google Maps</a>
+          </div>
+          <div class="contact">
+            <p>WhatsApp and calls: <b>055 420 0636</b></p>
+          </div>
+        </div>
+        <div>
+          <table class="hours" id="hours" aria-label="Opening hours"></table>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 King's Shawarma, Abuakwa Maakro</span>
+    <span>Website by Saah-Baah Solomon</span>
+  </div>
+</footer>
+
+<div class="bar" role="region" aria-label="Order total">
+  <div class="bar-in">
+    <div class="sum"><small id="barCount">0 items</small><strong id="barTotal">GH₵0</strong></div>
+    <button class="btn btn-brand" type="button" data-go="order">Review order</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Replace with the vendor's WhatsApp number in international format, no plus sign.
+  var WHATSAPP = "233554200636";
+  var OPEN_HOUR = 10, CLOSE_HOUR = 22; // Ghana time (GMT, no daylight saving)
+
+  var MENU = [
+    { cat: "Shawarma", items: [
+      { id: "ch-r", name: "Chicken Shawarma", desc: "Regular", price: 30 },
+      { id: "ch-l", name: "Chicken Shawarma", desc: "Large", price: 35 },
+      { id: "bf-r", name: "Beef Shawarma", desc: "Regular", price: 30 },
+      { id: "bf-l", name: "Beef Shawarma", desc: "Large", price: 40 },
+      { id: "mx-r", name: "Mixed Shawarma", desc: "Chicken and beef, regular", price: 35 },
+      { id: "mx-l", name: "Mixed Shawarma", desc: "Chicken and beef, large", price: 45 }
+    ]},
+    { cat: "Extras", items: [
+      { id: "x-sau", name: "Extra sausage", desc: "Added to any wrap", price: 5 },
+      { id: "x-chz", name: "Extra cheese", desc: "Added to any wrap", price: 5 },
+      { id: "x-mt", name: "Extra meat", desc: "Added to any wrap", price: 10 }
+    ]},
+    { cat: "Combos", items: [
+      { id: "cb-k", name: "The King's Combo", desc: "Large chicken shawarma and a drink", price: 40 }
+    ]},
+    { cat: "Drinks", items: [
+      { id: "d-w", name: "Bottled water", desc: "", price: 3 },
+      { id: "d-s", name: "Soft drink", desc: "", price: 8 },
+      { id: "d-z", name: "Zobo", desc: "Chilled", price: 10 }
+    ]}
+  ];
+
+  var qty = {};
+  var byId = {};
+  MENU.forEach(function (c) { c.items.forEach(function (i) { byId[i.id] = i; qty[i.id] = 0; }); });
+
+  function money(n) { return "GH₵" + n; }
+  function $(id) { return document.getElementById(id); }
+
+  // render menu
+  var grid = $("menuGrid");
+  MENU.forEach(function (c) {
+    var sec = document.createElement("div");
+    sec.className = "cat";
+    var html = "<h3>" + c.cat + "</h3>";
+    c.items.forEach(function (i) {
+      html += '<div class="item" data-id="' + i.id + '" data-qty="0">' +
+        '<div class="info"><div class="name">' + i.name + '</div>' +
+        (i.desc ? '<div class="desc">' + i.desc + '</div>' : '') + '</div>' +
+        '<div class="side"><span class="cost">' + money(i.price) + '</span>' +
+        '<div class="stepper"><button type="button" data-act="dec" aria-label="Remove one ' + i.name + (i.desc ? ', ' + i.desc : '') + '">−</button>' +
+        '<output aria-live="polite">0</output>' +
+        '<button type="button" data-act="inc" aria-label="Add one ' + i.name + (i.desc ? ', ' + i.desc : '') + '">+</button></div></div></div>';
+    });
+    sec.innerHTML = html;
+    grid.appendChild(sec);
+  });
+
+  grid.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-act]");
+    if (!btn) return;
+    var row = btn.closest(".item");
+    var id = row.getAttribute("data-id");
+    var d = btn.getAttribute("data-act") === "inc" ? 1 : -1;
+    qty[id] = Math.max(0, Math.min(20, qty[id] + d));
+    refresh();
+  });
+
+  function lineLabel(i) { return i.name + (i.desc && /^(Regular|Large)/.test(i.desc) ? " (" + i.desc.split(",").pop().trim().replace(/^./, function (m) { return m.toUpperCase(); }) + ")" : ""); }
+
+  function message() {
+    var parts = ["Hello King's Shawarma, I would like to order:"];
+    var total = 0;
+    Object.keys(qty).forEach(function (id) {
+      if (qty[id] > 0) {
+        var i = byId[id];
+        total += i.price * qty[id];
+        parts.push(qty[id] + " x " + lineLabel(i) + " - " + money(i.price * qty[id]));
+      }
+    });
+    parts.push("Total: " + money(total));
+    var name = $("custName").value.trim();
+    if (name) parts.push("Name: " + name);
+    var mode = document.querySelector('input[name="fulfil"]:checked').value;
+    parts.push("Pickup or delivery: " + mode);
+    if (mode === "Delivery") {
+      var a = $("custAddr").value.trim();
+      if (a) parts.push("Delivery location: " + a);
+    }
+    var note = $("custNote").value.trim();
+    if (note) parts.push("Note: " + note);
+    return parts.join("\n");
+  }
+
+  function refresh() {
+    var count = 0, total = 0, lines = "";
+    Object.keys(qty).forEach(function (id) {
+      var i = byId[id], q = qty[id];
+      var row = document.querySelector('.item[data-id="' + id + '"]');
+      row.setAttribute("data-qty", q);
+      row.querySelector("output").textContent = q;
+      if (q > 0) {
+        count += q; total += i.price * q;
+        lines += "<li><span>" + q + " × " + lineLabel(i) + "</span><span>" + money(i.price * q) + "</span></li>";
+      }
+    });
+    $("lines").innerHTML = lines || '<li class="empty"><span>Nothing added yet. Pick from the menu above.</span><span></span></li>';
+    $("total").textContent = money(total);
+    $("barTotal").textContent = money(total);
+    $("barCount").textContent = count + (count === 1 ? " item" : " items");
+    var btn = $("sendBtn");
+    if (count > 0) {
+      btn.setAttribute("aria-disabled", "false");
+      btn.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(message());
+      $("sendHint").textContent = "This opens WhatsApp with your order already written.";
+    } else {
+      btn.setAttribute("aria-disabled", "true");
+      btn.href = "#";
+      $("sendHint").textContent = "Add at least one item to send your order.";
+    }
+  }
+
+  $("sendBtn").addEventListener("click", function (e) {
+    if (this.getAttribute("aria-disabled") === "true") e.preventDefault();
+  });
+  ["custName", "custAddr", "custNote"].forEach(function (id) { $(id).addEventListener("input", refresh); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="fulfil"]'), function (r) {
+    r.addEventListener("change", function () {
+      $("addrField").hidden = document.querySelector('input[name="fulfil"]:checked').value !== "Delivery";
+      refresh();
+    });
+  });
+  $("orderForm").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  $("copyBtn").addEventListener("click", function () {
+    var any = Object.keys(qty).some(function (id) { return qty[id] > 0; });
+    if (!any) { $("sendHint").textContent = "Add at least one item first."; return; }
+    var t = message();
+    var box = $("copyBox");
+    function fallback() { box.value = t; box.hidden = false; box.focus(); box.select(); $("sendHint").textContent = "Copy the text above and paste it in WhatsApp to 055 420 0636."; }
+    try {
+      navigator.clipboard.writeText(t).then(function () {
+        $("sendHint").textContent = "Order copied. Paste it in WhatsApp to 055 420 0636.";
+      }, fallback);
+    } catch (err) { fallback(); }
+  });
+
+  // smooth jumps between sections
+  Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function (b) {
+    b.addEventListener("click", function () {
+      var t = $(b.getAttribute("data-go"));
+      if (t) t.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    });
+  });
+
+  // hours and open badge (Ghana is on GMT all year)
+  var now = new Date();
+  var hr = now.getUTCHours() + now.getUTCMinutes() / 60;
+  var isOpen = hr >= OPEN_HOUR && hr < CLOSE_HOUR;
+  var st = $("status");
+  st.setAttribute("data-open", isOpen ? "true" : "false");
+  $("statusText").textContent = isOpen ? "Open now · until 10:00 PM" : "Closed · opens 10:00 AM";
+
+  var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var order = [1, 2, 3, 4, 5, 6, 0];
+  var today = now.getUTCDay();
+  $("hours").innerHTML = order.map(function (d) {
+    return '<tr' + (d === today ? ' class="today"' : '') + '><th scope="row">' + days[d] + '</th><td>10:00 AM – 10:00 PM</td></tr>';
+  }).join("");
+
+  refresh();
+})();
+</script>
